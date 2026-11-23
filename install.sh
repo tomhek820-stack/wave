@@ -6,8 +6,8 @@ BRANCH="${ZORO_VIDEO_BRANCH:-main}"
 TARGET_DIR="${ZORO_VIDEO_TARGET:-$PWD}"
 FORCE="${ZORO_VIDEO_FORCE:-0}"
 
-log(){ printf '[ZORO VIDEO] %s\\n' "$*"; }
-die(){ printf '[ZORO VIDEO][ERROR] %s\\n' "$*" >&2; exit 1; }
+log(){ printf '[ZORO VIDEO] %s\n' "$*"; }
+die(){ printf '[ZORO VIDEO][ERROR] %s\n' "$*" >&2; exit 1; }
 
 command -v git >/dev/null 2>&1 || die "Git is required. Install Git and retry."
 [[ -d "$TARGET_DIR" ]] || die "Target directory does not exist: $TARGET_DIR"
@@ -64,13 +64,13 @@ The supplied audio is the timing master. The user provides audio, exact voiceove
 $END_MARKER"
 
 if [[ ! -f "$MAIN_CLAUDE" ]]; then
-  printf '%s\\n' "$BLOCK" > "$MAIN_CLAUDE"
+  printf '%s\n' "$BLOCK" > "$MAIN_CLAUDE"
   log "Created project CLAUDE.md with ZORO instructions."
 else
   BEGIN_COUNT="$(grep -Fc "$BEGIN_MARKER" "$MAIN_CLAUDE" || true)"
   END_COUNT="$(grep -Fc "$END_MARKER" "$MAIN_CLAUDE" || true)"
   if [[ "$BEGIN_COUNT" == "0" && "$END_COUNT" == "0" ]]; then
-    printf '\\n%s\\n' "$BLOCK" >> "$MAIN_CLAUDE"
+    printf '\n%s\n' "$BLOCK" >> "$MAIN_CLAUDE"
     log "Appended ZORO instructions without replacing existing CLAUDE.md content."
   elif [[ "$BEGIN_COUNT" == "1" && "$END_COUNT" == "1" ]]; then
     TMP_CLAUDE="$TMP_DIR/CLAUDE.md"
@@ -92,7 +92,7 @@ else
         if (inside || !seen_begin || !seen_end) exit 2
       }
     ' "$MAIN_CLAUDE" > "$TMP_CLAUDE" || die "Malformed ZORO markers in CLAUDE.md; original file was preserved."
-    printf '\\n%s\\n' "$BLOCK" >> "$TMP_CLAUDE"
+    printf '\n%s\n' "$BLOCK" >> "$TMP_CLAUDE"
     cp "$TMP_CLAUDE" "$MAIN_CLAUDE"
     log "Updated the existing managed ZORO instruction block."
   else
