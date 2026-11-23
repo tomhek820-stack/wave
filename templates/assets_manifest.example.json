@@ -1,0 +1,18 @@
+{
+  "project_id": "sample-project",
+  "assets": [
+    {
+      "id": "CHAR-01",
+      "path": "assets/characters/lead-character.png",
+      "type": "character_reference",
+      "created_by": "claude_available_image_tool",
+      "prompt_file": "prompts/CHAR-01.txt",
+      "continuity_lock": {
+        "face": "keep consistent",
+        "wardrobe": "dark blue jacket",
+        "palette": ["#10243A", "#E6B566"]
+      },
+      "license_or_origin": "generated"
+    }
+  ]
+}
