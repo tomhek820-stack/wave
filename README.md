@@ -37,5 +37,5 @@
 - `templates/` — قالب تسليم المواد ومثال بنية المشروع.
 - `.claude/skills/video-production/SKILL.md` — مهارة إنتاج قابلة للاستدعاء في Claude Code.
 
-## تنبيه واقعي
+## فحص المشروع محلياً\n\nيوجد مدقق أولي مستقل عن أدوات التوليد:\n\n```bash\npython tools/validate_project.py --project-dir path/to/project\npython tools/validate_project.py --project-dir path/to/project --check-final-output\n```\n\nيتحقق من ملفات الإدخال وخطة المشاهد وملف الأصول والترجمة، ويفحص الوسائط عبر ffprobe عند توفره. هذا الفحص لا يغني عن المراجعة البصرية والاستماع الفعلي.\n\n## تنبيه واقعي
 هذه الحزمة توجه Claude ولا تمنح الحساب تلقائياً أدوات توليد صور أو فيديو أو صوت. على Claude فحص الأدوات المتاحة فعلياً، واختيار مسار إنتاج قابل للتنفيذ، وتوثيق أي اعتماد خارجي أو قيد تقني.
