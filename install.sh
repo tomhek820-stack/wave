@@ -6,8 +6,8 @@ BRANCH="${ZORO_VIDEO_BRANCH:-main}"
 TARGET_DIR="${ZORO_VIDEO_TARGET:-$PWD}"
 FORCE="${ZORO_VIDEO_FORCE:-0}"
 
-log(){ printf '[ZORO VIDEO] %s\n' "$*"; }
-die(){ printf '[ZORO VIDEO][ERROR] %s\n' "$*" >&2; exit 1; }
+log(){ printf '[ZORO VIDEO] %s\\n' "$*"; }
+die(){ printf '[ZORO VIDEO][ERROR] %s\\n' "$*" >&2; exit 1; }
 
 command -v git >/dev/null 2>&1 || die "Git is required. Install Git and retry."
 [[ -d "$TARGET_DIR" ]] || die "Target directory does not exist: $TARGET_DIR"
@@ -22,7 +22,7 @@ log "Cloning $REPO_URL (branch: $BRANCH)"
 git clone --depth 1 --branch "$BRANCH" "$REPO_URL" "$TMP_DIR/repo" >/dev/null 2>&1 || die "Could not clone repository/branch."
 SRC="$TMP_DIR/repo"
 
-for required in CLAUDE.md DIRECTOR_SYSTEM.md WORKFLOW.md QUALITY_CONTROL.md SCENE_SCHEMA.json CLAUDE_WEB_PROMPT.md .claude/skills/video-production/SKILL.md; do
+for required in CLAUDE.md DIRECTOR_SYSTEM.md WORKFLOW.md QUALITY_CONTROL.md SCENE_SCHEMA.json CLAUDE_WEB_PROMPT.md .claude/skills/video-production/SKILL.md templates/PROJECT_INPUT_TEMPLATE.md; do
   [[ -s "$SRC/$required" ]] || die "Repository package is incomplete: $required"
 done
 
@@ -48,7 +48,7 @@ else
   cp "$SRC/.claude/skills/video-production/SKILL.md" "$SKILL_DEST"
 fi
 
-# Add a small, managed pointer block to the project's CLAUDE.md without replacing user instructions.
+# Add or safely refresh the managed pointer block without replacing user instructions.
 MAIN_CLAUDE="$TARGET_DIR/CLAUDE.md"
 BEGIN_MARKER="<!-- ZORO VIDEO DIRECTOR PRO: BEGIN -->"
 END_MARKER="<!-- ZORO VIDEO DIRECTOR PRO: END -->"
@@ -64,26 +64,42 @@ The supplied audio is the timing master. The user provides audio, exact voiceove
 $END_MARKER"
 
 if [[ ! -f "$MAIN_CLAUDE" ]]; then
-  printf '%s\n' "$BLOCK" > "$MAIN_CLAUDE"
+  printf '%s\\n' "$BLOCK" > "$MAIN_CLAUDE"
   log "Created project CLAUDE.md with ZORO instructions."
 else
-  TMP_CLAUDE="$TMP_DIR/CLAUDE.md"
-  if grep -Fq "$BEGIN_MARKER" "$MAIN_CLAUDE"; then
+  BEGIN_COUNT="$(grep -Fc "$BEGIN_MARKER" "$MAIN_CLAUDE" || true)"
+  END_COUNT="$(grep -Fc "$END_MARKER" "$MAIN_CLAUDE" || true)"
+  if [[ "$BEGIN_COUNT" == "0" && "$END_COUNT" == "0" ]]; then
+    printf '\\n%s\\n' "$BLOCK" >> "$MAIN_CLAUDE"
+    log "Appended ZORO instructions without replacing existing CLAUDE.md content."
+  elif [[ "$BEGIN_COUNT" == "1" && "$END_COUNT" == "1" ]]; then
+    TMP_CLAUDE="$TMP_DIR/CLAUDE.md"
     awk -v begin="$BEGIN_MARKER" -v end="$END_MARKER" '
-      $0 == begin {skip=1; next}
-      $0 == end {skip=0; next}
-      !skip {print}
-    ' "$MAIN_CLAUDE" > "$TMP_CLAUDE"
-    printf '\n%s\n' "$BLOCK" >> "$TMP_CLAUDE"
+      $0 == begin {
+        if (inside || seen_begin) exit 2
+        inside=1
+        seen_begin=1
+        next
+      }
+      $0 == end {
+        if (!inside) exit 2
+        inside=0
+        seen_end=1
+        next
+      }
+      !inside { print }
+      END {
+        if (inside || !seen_begin || !seen_end) exit 2
+      }
+    ' "$MAIN_CLAUDE" > "$TMP_CLAUDE" || die "Malformed ZORO markers in CLAUDE.md; original file was preserved."
+    printf '\\n%s\\n' "$BLOCK" >> "$TMP_CLAUDE"
     cp "$TMP_CLAUDE" "$MAIN_CLAUDE"
     log "Updated the existing managed ZORO instruction block."
   else
-    printf '\n%s\n' "$BLOCK" >> "$MAIN_CLAUDE"
-    log "Appended ZORO instructions without replacing existing CLAUDE.md content."
+    die "Unpaired or duplicated ZORO markers in CLAUDE.md; original file was preserved."
   fi
 fi
 
-# Copy the project-input template into a dedicated starter folder.
 mkdir -p "$TARGET_DIR/zoro-video-input"
 cp "$SRC/templates/PROJECT_INPUT_TEMPLATE.md" "$TARGET_DIR/zoro-video-input/README_INPUT.md"
 
