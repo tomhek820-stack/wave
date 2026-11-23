@@ -39,3 +39,15 @@
 
 ## فحص المشروع محلياً\n\nيوجد مدقق أولي مستقل عن أدوات التوليد:\n\n```bash\npython tools/validate_project.py --project-dir path/to/project\npython tools/validate_project.py --project-dir path/to/project --check-final-output\n```\n\nيتحقق من ملفات الإدخال وخطة المشاهد وملف الأصول والترجمة، ويفحص الوسائط عبر ffprobe عند توفره. هذا الفحص لا يغني عن المراجعة البصرية والاستماع الفعلي.\n\n## تنبيه واقعي
 هذه الحزمة توجه Claude ولا تمنح الحساب تلقائياً أدوات توليد صور أو فيديو أو صوت. على Claude فحص الأدوات المتاحة فعلياً، واختيار مسار إنتاج قابل للتنفيذ، وتوثيق أي اعتماد خارجي أو قيد تقني.
+
+
+## تثبيت سريع داخل مشروع Claude Code
+
+من جذر المشروع، اطلب من Claude تنفيذ أمر التثبيت الوارد في [INSTALL.md](INSTALL.md). يمكن أيضاً تنفيذ:
+
+```bash
+git clone --depth 1 https://github.com/tomhek820-stack/wave.git /tmp/zoro-video-director-pro
+bash /tmp/zoro-video-director-pro/install.sh
+```
+
+المثبت يحافظ على تعليمات `CLAUDE.md` الحالية ويضيف كتلة ZORO مُدارة، ويثبت ملفات المخرج والمهارة في مجلدات مخصصة. راجع [دليل التثبيت](INSTALL.md) قبل استخدام خيار التحديث الإجباري.
