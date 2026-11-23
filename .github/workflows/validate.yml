@@ -22,6 +22,8 @@ jobs:
           python-version: "3.12"
       - name: Validate Python syntax
         run: python -m py_compile tools/validate_project.py
+      - name: Validate installer shell syntax
+        run: bash -n install.sh
       - name: Validate scene schema JSON
         run: python -m json.tool SCENE_SCHEMA.json > /dev/null
       - name: Check required instruction files
@@ -31,4 +33,7 @@ jobs:
           test -s WORKFLOW.md
           test -s QUALITY_CONTROL.md
           test -s CLAUDE_WEB_PROMPT.md
+          test -s INSTALL.md
+          test -s install.sh
           test -s .claude/skills/video-production/SKILL.md
+          test -s templates/PROJECT_INPUT_TEMPLATE.md
