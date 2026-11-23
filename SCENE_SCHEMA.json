@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "project": {
+    "title": "",
+    "video_type": "",
+    "language": "ar",
+    "aspect_ratio": "9:16",
+    "resolution": "1080x1920",
+    "fps": 30,
+    "audio_file": "",
+    "audio_duration_seconds": 0,
+    "voiceover_text_file": "",
+    "video_text_file": ""
+  },
+  "creative_direction": {
+    "audience": "",
+    "goal": "",
+    "tone": "",
+    "visual_style": "",
+    "color_palette": [],
+    "typography": "",
+    "continuity_rules": []
+  },
+  "scenes": [
+    {
+      "scene_id": "S001",
+      "start_seconds": 0,
+      "end_seconds": 5,
+      "voiceover_exact": "",
+      "narrative_beat": "",
+      "visual_purpose": "",
+      "visual_representation": "generated_image",
+      "asset_status": "to_create",
+      "asset_ids": [],
+      "generation_brief": {
+        "subject": "",
+        "environment": "",
+        "composition": "",
+        "camera": "",
+        "lighting": "",
+        "style": "",
+        "must_include": [],
+        "must_avoid": [],
+        "continuity_reference_ids": []
+      },
+      "motion": [
+        {
+          "target": "",
+          "action": "",
+          "from": "",
+          "to": "",
+          "duration_seconds": 0,
+          "easing": "ease-in-out",
+          "purpose": ""
+        }
+      ],
+      "on_screen_text": [],
+      "subtitle": {
+        "text": "",
+        "start_seconds": 0,
+        "end_seconds": 0
+      },
+      "transition_in": "",
+      "transition_out": "",
+      "sound_design": [],
+      "verification_notes": []
+    }
+  ],
+  "assets": [
+    {
+      "asset_id": "A001",
+      "path": "",
+      "kind": "image",
+      "origin": "generated",
+      "tool_or_source": "",
+      "prompt_or_source_url": "",
+      "license": "not_applicable_or_verified",
+      "continuity_notes": ""
+    }
+  ],
+  "delivery": {
+    "video_path": "output/final_video.mp4",
+    "subtitle_path": "output/subtitles.srt",
+    "report_path": "reports/quality_report.md"
+  }
+}
